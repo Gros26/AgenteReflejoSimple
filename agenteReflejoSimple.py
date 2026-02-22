@@ -4,7 +4,7 @@ Sensores, Comportamiento (mapeo de percepciones a aciones), Actuadores
 
 ambiente    -------> el agente tiene percepcion del ambiente con los sensores ----->  agente
 
-con el mapeo de percepciones a aciones entonces:
+con el mapeo de percepciones a acciones entonces:
 
 ambiente <---------- el agente ejecuta una accion sobre el ambiente con los actuadores <--------- agente
 
@@ -88,6 +88,63 @@ class Mouse:
             return True
         else:
             return False
+        
+    # def move(self, x, y):
+    #     #esto aun no funciona
+    #     self.row = x
+    #     self.column = y
+        
+    def decide_action(self):
+        if self.smells_cheese:
+            return "take cheese"
+        elif self.left and not self.up and not self.right and not self.down:
+            self.move(*(self._go_up())) #* es el operador de desempaquetado, ya que _go_up me devuelve una tupla
+        elif self.left and self.up and not self.right and not self.down:
+            self.move(*(self._go_up()))
+        elif self.left and not self.up and not self.right and self.down:
+            self.move(*(self._go_up()))
+        elif self.left and self.up and not self.right and self.down:
+            self.move(*(self._go_left()))
+        elif not self.left and self.up and self.right and self.down:
+            self.move(*(self._go_left()))
+        elif not self.left and self.up and self.right and not self.down:
+            self.move(*(self._go_right()))
+        elif not self.left and self.up and not self.right and self.down:
+            self.move(*(self._go_left()))
+        elif not self.left and self.up and not self.right and not self.down:
+            self.move(*(self._go_left()))
+        elif not self.left and not self.up and self.right and self.down:
+            self.move(*(self._go_up()))
+        elif not self.left and not self.up and self.right and not self.down:
+            self.move(*(self._go_right()))
+        elif not self.left and not self.up and not self.right and self.down:
+            self.move(*(self._go_down()))
+        elif not self.left and not self.up and not self.right and not self.down:
+            self.move(*(self._go_up()))
+        elif self.left and not self.up and self.right and self.down:
+            self.move(*(self._go_right()))
+        elif self.left and not self.up and self.right and not self.down:
+            self.move(*(self._go_right()))
+        elif self.left and not self.up and not self.right and self.down:
+            self.move(*(self._go_down()))
+
+    # def __str__(self):
+    #     return "2"
+    
+    def _go_left(self):
+        return (self.row, self.column - 1)
+
+    def _go_up(self):
+        return (self.row - 1, self.column)
+    
+    def _go_right(self):
+        return (self.row, self.column + 1)
+    
+    def _go_down(self):
+        return (self.row + 1, self.column)
+
+    
+            
 
     
 
