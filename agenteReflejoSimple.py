@@ -18,12 +18,12 @@ image.png
 
 """
 
-# 0 -> casilla vacia
-# 1 -> obstaculo
-# 2 -> ratón
-# 3 -> queso
+# 0 -> empty cell
+# 1 -> obstacle
+# 2 -> mouse
+# 3 -> cheese
 
-def createMatrix(): 
+def create_matrix(): 
     matrix = [
         [0,0,0,0],
         [1,0,0,1],
@@ -33,13 +33,13 @@ def createMatrix():
 
     return matrix
 
-print(len(createMatrix()))
+print(len(create_matrix()))
 
-matrix = createMatrix()
+matrix = create_matrix()
 print(len(matrix))
 print(len(matrix[0]))
 
-def printMatrix(matrix):
+def print_matrix(matrix):
     rows = len(matrix)
     string = ""
     for i in range(rows):
@@ -51,8 +51,45 @@ def printMatrix(matrix):
 
     print(string)
 
-printMatrix(matrix)
+print_matrix(matrix)
 
+
+""" 
+Como se que el raton tiene una posicion y va a tener 5 sensores, que serian:
+Sensor izquierdo, arriba, derecho, abajo y sensor si huele a queso
+"""
+
+class Mouse:
+    def __init__(self, x, y, matrix):
+        self.row = x
+        self.column = y
+        self.matrix = matrix
+        self.update_sensors()
+
+    def position(self):
+        return (self.row, self.column) 
+    
+    def update_sensors(self):
+        self.left = self.column - 1 >= 0 and self.matrix[self.row][self.column - 1] != 1
+        self.up = self.row - 1 >= 0 and self.matrix[self.row - 1][self.column] != 1
+        self.right = self.column + 1 <= (len(self.matrix[self.row]) - 1) and self.matrix[self.row][self.column + 1] != 1
+        self.down = self.row + 1 <= (len(self.matrix) - 1) and self.matrix[self.row + 1][self.column] != 1
+        self.smells_cheese = self._is_cheese_adjacent()
+
+    #funcion auxiliar privada
+    def _is_cheese_adjacent(self):
+        if(self.column - 1 >= 0 and self.matrix[self.row][self.column - 1] == 3):
+            return True
+        elif(self.row - 1 >= 0 and self.matrix[self.row - 1][self.column] == 3):
+            return True
+        elif(self.column + 1 <= (len(self.matrix[self.row]) - 1) and self.matrix[self.row][self.column + 1] == 3):
+            return True
+        elif(self.row + 1 <= (len(self.matrix) - 1) and self.matrix[self.row + 1][self.column] == 3):
+            return True
+        else:
+            return False
+
+    
 
 
 
