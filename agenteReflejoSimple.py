@@ -23,7 +23,8 @@ image.png
 # 2 -> mouse
 # 3 -> cheese
 
-def create_matrix(): 
+def create_matrix():
+    #esto seria bueno que fuera aleatorio, que se le pasen medidas y ponga las cosas aleatoriamente 
     matrix = [
         [0,0,0,0],
         [1,0,0,1],
@@ -89,44 +90,65 @@ class Mouse:
         else:
             return False
         
-    # def move(self, x, y):
-    #     #esto aun no funciona
-    #     self.row = x
-    #     self.column = y
+    def move(self, x, y):
+        self.matrix[self.row][self.column] = 0
+        self.matrix[x][y] = 2
+        self.row = x
+        self.column = y
+        self.update_sensors()
+        
         
     def decide_action(self):
         if self.smells_cheese:
-            return "take cheese"
-        elif self.left and not self.up and not self.right and not self.down:
-            self.move(*(self._go_up())) #* es el operador de desempaquetado, ya que _go_up me devuelve una tupla
-        elif self.left and self.up and not self.right and not self.down:
+            self.eat_cheese()
+        # libre, libre, libre, libre -> ir arriba
+        elif self.left and self.up and self.right and self.down:
+            self.move(*(self._go_up())) #* signo de desempaquetado para la tupla
+        # libre, libre, libre, no libre -> ir arriba
+        elif self.left and self.up and self.right and not self.down:
             self.move(*(self._go_up()))
-        elif self.left and not self.up and not self.right and self.down:
-            self.move(*(self._go_up()))
+        # libre, libre, no libre, libre -> ir arriba
         elif self.left and self.up and not self.right and self.down:
-            self.move(*(self._go_left()))
-        elif not self.left and self.up and self.right and self.down:
-            self.move(*(self._go_left()))
-        elif not self.left and self.up and self.right and not self.down:
-            self.move(*(self._go_right()))
-        elif not self.left and self.up and not self.right and self.down:
-            self.move(*(self._go_left()))
-        elif not self.left and self.up and not self.right and not self.down:
-            self.move(*(self._go_left()))
-        elif not self.left and not self.up and self.right and self.down:
             self.move(*(self._go_up()))
-        elif not self.left and not self.up and self.right and not self.down:
-            self.move(*(self._go_right()))
-        elif not self.left and not self.up and not self.right and self.down:
-            self.move(*(self._go_down()))
-        elif not self.left and not self.up and not self.right and not self.down:
-            self.move(*(self._go_up()))
+        # libre, libre, no libre, no libre -> ir izquierda
+        elif self.left and self.up and not self.right and not self.down:
+            self.move(*(self._go_left()))
+        # libre, no libre, libre, libre -> ir izquierda
         elif self.left and not self.up and self.right and self.down:
-            self.move(*(self._go_right()))
+            self.move(*(self._go_left()))
+        # libre, no libre, libre, no libre -> ir derecha
         elif self.left and not self.up and self.right and not self.down:
             self.move(*(self._go_right()))
+        # libre, no libre, no libre, libre -> ir izquierda
         elif self.left and not self.up and not self.right and self.down:
+            self.move(*(self._go_left()))
+        # libre, no libre, no libre, no libre -> ir izquierda
+        elif self.left and not self.up and not self.right and not self.down:
+            self.move(*(self._go_left()))
+        # no libre, libre, libre, libre -> ir arriba
+        elif not self.left and self.up and self.right and self.down:
+            self.move(*(self._go_up()))
+        # no libre, libre, libre, no libre -> ir derecha
+        elif not self.left and self.up and self.right and not self.down:
+            self.move(*(self._go_right()))
+        # no libre, libre, no libre, libre -> ir abajo
+        elif not self.left and self.up and not self.right and self.down:
             self.move(*(self._go_down()))
+        # no libre, libre, no libre, no libre -> ir arriba
+        elif not self.left and self.up and not self.right and not self.down:
+            self.move(*(self._go_up()))
+        # no libre, no libre, libre, libre -> ir derecha
+        elif not self.left and not self.up and self.right and self.down:
+            self.move(*(self._go_right()))
+        # no libre, no libre, libre, no libre -> ir derecha
+        elif not self.left and not self.up and self.right and not self.down:
+            self.move(*(self._go_right()))
+        # no libre, no libre, no libre, libre -> ir abajo
+        elif not self.left and not self.up and not self.right and self.down:
+            self.move(*(self._go_down()))
+
+    def eat_cheese(self):
+        return "delicious"
 
     # def __str__(self):
     #     return "2"
@@ -143,10 +165,29 @@ class Mouse:
     def _go_down(self):
         return (self.row + 1, self.column)
 
-    
-            
 
-    
 
+#este seria el caso donde no termina, porque sus acciones lo dejan en bucle
+# mouse = Mouse(3, 3, matrix)
+# while(mouse.smells_cheese != True):
+#     mouse.decide_action()
+#     print_matrix(matrix)
+    
+#aqui siguiendo la image2.png
+
+matrix2 = [
+    [3,0,0,0],
+    [0,1,2,0],
+    [0,1,0,0],
+    [0,0,0,1]
+]
+print("--------------------")
+print_matrix(matrix)
+
+mouse = Mouse(1, 2, matrix2)
+while(mouse.smells_cheese != True):
+    mouse.decide_action()
+    print_matrix(matrix2)
+    
 
 
