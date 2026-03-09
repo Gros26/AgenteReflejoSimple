@@ -190,4 +190,75 @@ while(mouse.smells_cheese != True):
     print_matrix(matrix2)
     
 
+# 0 -> empty cell
+# 1 -> obstacle
+# 2 -> mouse
+# 3 -> cheese
+
+class Maze():
+    def __init__(self, filename):
+
+        self.solution = None
+
+        #Leer el archivo 
+        with open(filename) as f:
+            contents = f.read()
+
+        #Validacion de que haya solo un raton
+        if contents.count("2") != 1:
+            raise Exception("maze must have exactly one mouse")
+        
+        #validacion de que haya solo un queso, en el proyecto se puede poner de que haya al menos un pasajero
+        if contents.count("3") != 1:
+            raise Exception("maze must have exactly one cheese")
+        
+        #determinar la altura y el ancho de el maze
+        contents = contents.splitlines()
+        self.height = len(contents)
+        self.width = max(len(line) for line in contents)
+
+        #voy a hacer un arreglo de los muros, ademas miro donde inicio y donde esta mi meta
+        self.walls = []
+        for i in range(self.height):
+            row = []
+            for j in range(self.width):
+                try:
+                    if contents[i][j] == "0":
+                        row.append(False)
+                    elif contents[i][j] == "2":
+                        self.start = (i, j) #guardo mi posicion de inicio
+                        row.append(False)
+                    elif contents[i][j] == "3":
+                        self.goal = (i, j) #guardo la posicion de mi meta
+                        row.append(False)
+                    else:
+                        row.append(True)
+                except IndexError:
+                    row.append(False)
+            self.walls.append(row) # esto me daria una lista de listas que puedo acceder bidimensionalmente
+
+    def print(self):
+        print()
+        #enumerate me devuelve una tupla (posicion, valor) por eso declaro i y row para que se guarden ahi estos valores
+        for i, row in enumerate(self.walls): 
+            for j, column in enumerate(row):
+                if column: 
+                    print("█", end="")
+                elif (i, j) == self.start:
+                    print("R", end="")
+                elif (i, j) == self.goal:
+                    print("Q", end="")
+                else:
+                    print(" ", end="")
+            print()
+        print()
+
+
+maze = Maze("maze1.txt")
+print(maze.walls)
+maze.print()
+                
+
+
+        
 
